@@ -281,6 +281,73 @@
     color: var(--ash);
     font-size: 16px;
   }
+  .invitation {
+    margin-top: 48px;
+    padding: 36px 32px;
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,0.25);
+    text-align: center;
+    position: relative;
+  }
+  .invitation::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--gold);
+    opacity: 0.3;
+  }
+  .invitation::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--gold);
+    opacity: 0.3;
+  }
+  .invitation-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 14px;
+  }
+  .invitation-text {
+    font-size: 18px;
+    font-style: italic;
+    color: var(--deep);
+    font-weight: 300;
+    line-height: 1.8;
+    max-width: 420px;
+    margin: 0 auto 24px;
+  }
+  .invitation-link {
+    display: inline-block;
+    padding: 12px 36px;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .invitation-link::before {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border: 1px solid rgba(184,150,62,0.15);
+    pointer-events: none;
+  }
+  .invitation-link:hover {
+    background: var(--deep);
+    border-color: var(--deep);
+    color: var(--gold-light);
+  }
   .reset-btn {
     display: block;
     margin: 36px auto 0;
@@ -346,6 +413,13 @@
       <div class="path-body" id="pathEl"></div>
     </div>
     <div class="closing-line" id="closingEl"></div>
+
+    <div class="invitation">
+      <div class="invitation-eyebrow">A next step, if you feel called</div>
+      <p class="invitation-text">If this reading stirred something you want to explore further, I offer a complimentary conversation — a space to go deeper into what is moving in you.</p>
+      <a href="https://calendly.com/bahazain87/30min" target="_blank" rel="noopener" class="invitation-link">Begin a conversation</a>
+    </div>
+
     <button class="reset-btn" onclick="reset()">Read another situation</button>
   </div>
 
