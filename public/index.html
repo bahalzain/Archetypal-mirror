@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Archetypal Mirror</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1614;
+    --parchment: #f5f0e8;
+    --gold: #b8963e;
+    --gold-light: #d4af6a;
+    --ash: #8a8078;
+    --deep: #2c2420;
+    --line: rgba(184,150,62,0.25);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--parchment);
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 15% 20%, rgba(184,150,62,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 85% 80%, rgba(44,36,32,0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .container {
+    position: relative;
+    z-index: 2;
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 60px 32px 100px;
+  }
+  header { text-align: center; margin-bottom: 52px; }
+  .eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    opacity: 0.85;
+  }
+  h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(26px, 5vw, 42px);
+    font-weight: 400;
+    color: var(--deep);
+    line-height: 1.2;
+    margin-bottom: 16px;
+    letter-spacing: 0.03em;
+  }
+  .subtitle {
+    font-size: 18px;
+    font-style: italic;
+    color: var(--ash);
+    font-weight: 300;
+    line-height: 1.6;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 26px auto;
+    max-width: 180px;
+  }
+  .divider-line { flex: 1; height: 1px; background: var(--line); }
+  .divider-diamond {
+    width: 6px; height: 6px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    opacity: 0.6;
+  }
+
+  /* INPUT */
+  .input-view { animation: fadeUp 0.6s ease forwards; }
+  label {
+    display: block;
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    opacity: 0.85;
+  }
+  textarea {
+    width: 100%;
+    min-height: 160px;
+    background: rgba(255,255,255,0.55);
+    border: 1px solid var(--line);
+    padding: 20px 22px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    color: var(--ink);
+    line-height: 1.75;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.3s, background 0.3s;
+    font-weight: 300;
+    display: block;
+    margin-bottom: 20px;
+  }
+  textarea::placeholder { color: var(--ash); opacity: 0.55; font-style: italic; }
+  textarea:focus { border-color: rgba(184,150,62,0.5); background: rgba(255,255,255,0.75); }
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 15px 32px;
+    background: var(--deep);
+    color: var(--gold-light);
+    border: none;
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .btn::before {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    border: 1px solid rgba(184,150,62,0.2);
+    pointer-events: none;
+  }
+  .btn:hover { background: #3d3028; }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  /* LOADING */
+  .loading {
+    display: none;
+    text-align: center;
+    padding: 64px 0;
+  }
+  .loading-symbol {
+    font-size: 30px;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 18px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .loading-text {
+    font-style: italic;
+    color: var(--ash);
+    font-size: 17px;
+    font-weight: 300;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.35; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.12); }
+  }
+
+  /* RESULT */
+  .result-view { display: none; animation: fadeUp 0.8s ease forwards; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .situation-echo {
+    font-size: 17px;
+    font-style: italic;
+    color: var(--ash);
+    font-weight: 300;
+    line-height: 1.75;
+    padding: 20px 24px;
+    border-left: 2px solid var(--line);
+    margin-bottom: 44px;
+  }
+  .section-label {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    opacity: 0.8;
+  }
+  .archetype-card {
+    border: 1px solid var(--line);
+    padding: 26px 30px;
+    margin-bottom: 12px;
+    background: rgba(255,255,255,0.35);
+    position: relative;
+  }
+  .archetype-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+  }
+  .archetype-card.present::before { background: var(--gold); opacity: 0.9; }
+  .archetype-card.absent::before { background: var(--ash); opacity: 0.45; }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .archetype-name {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--deep);
+    letter-spacing: 0.05em;
+  }
+  .archetype-value {
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+  .card-role {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--ash);
+    margin-bottom: 10px;
+    font-weight: 300;
+  }
+  .card-body {
+    font-size: 17px;
+    line-height: 1.75;
+    color: var(--ink);
+    font-weight: 300;
+  }
+  .tension-block {
+    margin: 36px 0;
+    padding: 30px;
+    border: 1px solid var(--line);
+    background: rgba(44,36,32,0.03);
+    text-align: center;
+    position: relative;
+  }
+  .tension-block::before {
+    content: '◈';
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--parchment);
+    padding: 0 12px;
+    color: var(--gold);
+    font-size: 15px;
+  }
+  .tension-text {
+    font-size: 18px;
+    line-height: 1.8;
+    font-style: italic;
+    color: var(--deep);
+    font-weight: 300;
+  }
+  .path-body {
+    font-size: 18px;
+    line-height: 1.9;
+    color: var(--ink);
+    font-weight: 300;
+  }
+  .closing-line {
+    text-align: center;
+    margin-top: 52px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+    font-style: italic;
+    color: var(--ash);
+    font-size: 16px;
+  }
+  .reset-btn {
+    display: block;
+    margin: 36px auto 0;
+    background: none;
+    border: 1px solid var(--line);
+    padding: 11px 32px;
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--ash);
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.3s;
+  }
+  .reset-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .error-msg {
+    text-align: center;
+    color: #8a4a3a;
+    font-style: italic;
+    font-size: 16px;
+    margin-top: 16px;
+    display: none;
+  }
+
+  @media (max-width: 480px) {
+    .container { padding: 40px 18px 80px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="eyebrow">Inner Governance</div>
+    <h1>The Archetypal Mirror</h1>
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-diamond"></div>
+      <div class="divider-line"></div>
+    </div>
+    <p class="subtitle">Describe a situation you are living. Receive a reading through the eight archetypes.</p>
+  </header>
+
+  <div class="input-view" id="inputView">
+    <label for="situation">Your situation</label>
+    <textarea id="situation" placeholder="Write freely — what is happening, what is being asked of you, where you feel stuck or pulled…"></textarea>
+    <button class="btn" id="submitBtn" onclick="analyze()">Read the Mirror</button>
+    <div class="error-msg" id="errorMsg"></div>
+  </div>
+
+  <div class="loading" id="loading">
+    <span class="loading-symbol">◈</span>
+    <p class="loading-text">The archetypes are gathering…</p>
+  </div>
+
+  <div class="result-view" id="resultView">
+    <div class="situation-echo" id="echoEl"></div>
+    <div id="dominantEl"><div class="section-label">What is present</div></div>
+    <div id="absentEl" style="margin-top:32px"><div class="section-label">What is absent</div></div>
+    <div class="tension-block"><p class="tension-text" id="tensionEl"></p></div>
+    <div style="margin-top:44px">
+      <div class="section-label">The path forward</div>
+      <div class="path-body" id="pathEl"></div>
+    </div>
+    <div class="closing-line" id="closingEl"></div>
+    <button class="reset-btn" onclick="reset()">Read another situation</button>
+  </div>
+
+</div>
+<script>
+async function analyze() {
+  const situation = document.getElementById('situation').value.trim();
+  if (situation.length < 20) {
+    showError('Please describe your situation in a little more detail.');
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  hideError();
+  document.getElementById('inputView').style.display = 'none';
+  document.getElementById('loading').style.display = 'block';
+
+  try {
+    const response = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ situation })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Something went wrong.');
+    }
+
+    renderResult(data);
+  } catch (err) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('inputView').style.display = 'block';
+    btn.disabled = false;
+    showError(err.message || 'Something shifted in the reading. Please try again.');
+  }
+}
+
+function renderResult(d) {
+  document.getElementById('loading').style.display = 'none';
+
+  document.getElementById('echoEl').textContent = d.situation_echo || '';
+
+  const dom = document.getElementById('dominantEl');
+  dom.innerHTML = '<div class="section-label">What is present</div>';
+  (d.dominant || []).forEach(a => {
+    dom.innerHTML += `<div class="archetype-card present">
+      <div class="card-header"><span class="archetype-name">${a.archetype}</span><span class="archetype-value">${a.value}</span></div>
+      <div class="card-role">${a.role_in_situation}</div>
+      <div class="card-body">${a.analysis}</div>
+    </div>`;
+  });
+
+  const abs = document.getElementById('absentEl');
+  abs.innerHTML = '<div class="section-label">What is absent</div>';
+  (d.absent || []).forEach(a => {
+    abs.innerHTML += `<div class="archetype-card absent">
+      <div class="card-header"><span class="archetype-name">${a.archetype}</span><span class="archetype-value">${a.value}</span></div>
+      <div class="card-role">${a.role_in_situation}</div>
+      <div class="card-body">${a.analysis}</div>
+    </div>`;
+  });
+
+  document.getElementById('tensionEl').textContent = d.tension || '';
+  document.getElementById('pathEl').innerHTML = `<p>${d.path || ''}</p>`;
+  document.getElementById('closingEl').textContent = d.closing || '';
+
+  document.getElementById('resultView').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function reset() {
+  document.getElementById('resultView').style.display = 'none';
+  document.getElementById('situation').value = '';
+  document.getElementById('submitBtn').disabled = false;
+  document.getElementById('inputView').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorMsg');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function hideError() {
+  document.getElementById('errorMsg').style.display = 'none';
+}
+</script>
+</body>
+</html>
